@@ -1,0 +1,46 @@
+module.exports.descriptors = [
+  "Mountain",
+  "Himalayan",
+  "Valley",
+  "Riverside",
+  "Lakeside",
+  "Hilltop",
+  "Forest",
+  "Heritage",
+  "Royal",
+  "Luxury",
+  "Serene",
+  "Scenic",
+  "Sunset",
+  "Sunrise",
+  "Coastal",
+  "Beachfront",
+  "Backwater",
+  "Tea Estate",
+  "Pinewood",
+  "Snowview"
+];
+
+
+module.exports.places = [
+  "Villa",
+  "Cottage",
+  "Cabin",
+  "Homestay",
+  "Apartment",
+  "Flat",
+  "Bungalow",
+  "Resort",
+  "Retreat",
+  "Lodge",
+  "Haveli",
+  "Farmhouse",
+  "Guest House",
+  "Treehouse",
+  "Tent",
+  "Chalet",
+  "Hostel",
+  "Studio",
+  "Penthouse",
+  "Houseboat"
+];
