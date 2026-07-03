@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listings</title>
+</head>
+<body>
+    <h1>All StayFinder Listings</h1>
+    <div>
+        <a href="/listings/new">Add Listing</a>
+    </div>
+    <ul>
+        <% for(let stay of allStays){ %>
+            <li><a href="/listings/<%= stay._id %>"><%= stay.title %></a></li>
+        <% } %>
+    </ul>
+</body>
+</html>
