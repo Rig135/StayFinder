@@ -16,9 +16,16 @@ const seedDB = async() =>{
     await Listing.deleteMany({});
     for(let i=0;i<50;i++){
         const random417 = Math.floor(Math.random() * 417 );
+        const price = Math.floor(Math.random() * 4000) + 1000;
+        const imageId = Math.floor(Math.random() * 1000);
+
         const listing = new Listing({
             location: `${cities[random417].city}, ${cities[random417].state}`,
-            title: `${sample(descriptors)} ${sample(places)}`
+            title: `${sample(descriptors)} ${sample(places)}`,
+            // image: `https://picsum.photos/400?random=${Math.random()}`,
+            image: `https://picsum.photos/id/${imageId}/400/300`,
+            description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde iure odio modi officia, reiciendis non eius doloremque placeat corrupti ex numquam? Sed, in! Vitae libero cum dolore atque pariatur iste.',
+            price: price
         })
         await listing.save();
     }

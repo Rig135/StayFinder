@@ -3,8 +3,24 @@
     <div>
         <a href="/listings/new">Add Listing</a>
     </div>
-    <ul>
-        <% for(let stay of allStays){ %>
-            <li><a href="/listings/<%= stay._id %>"><%= stay.title %></a></li>
-        <% } %>
-    </ul>
+  
+    <% for(let stay of allStays){ %>
+            <div class="card" mb-3>
+                <div class="row">
+                    <div class="col-md-4">
+                        <img class="img-fluid" src="<%= stay.image %>" alt="">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= stay.title %></h5>
+                            <p class="card-text"><%= stay.description %></p>
+                            <p class="card-text">
+                                <small class="text-secondary"><%= stay.location %></small>
+                            </p>
+                            <a href="/listings/<%= stay._id %>" class="btn btn-primary">View <%= stay.title %></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    <% } %>
+  

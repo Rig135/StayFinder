@@ -1,14 +1,35 @@
 <% layout('layouts/boilerplate') %>
-    <h1><%= listing.title %></h1>
-    <h2><%= listing.location %></h2>
-    <p>
-        <a href="/listings/<%= listing._id %>/edit">Edit</a>
-    </p>
-    <p>
-        <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST">
-            <button>Delete</button>
+
+<div class="row">
+  <div class="col-md-6 offset-3">
+    <div class="card mb-3">
+      <img src="<%= listing.image %>" class="card-img-top" alt="..." />
+      <div class="card-body">
+        <h5 class="card-title"><%= listing.title %></h5>
+        <p class="card-text"><%= listing.description %></p>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item text-secondary"><%= listing.location %></li>
+        <li class="list-group-item">₹<%= listing.price %>/night</li>
+      </ul>
+      <div class="card-body">
+        <a
+          class="card-link btn btn-info"
+          href="/listings/<%= listing._id %>/edit"
+          >Edit</a
+        >
+        <form
+          class="d-inline"
+          action="/listings/<%= listing._id %>?_method=DELETE"
+          method="POST"
+        >
+          <button class="btn btn-danger">Delete</button>
         </form>
-    </p>
-    <footer>
-        <a href="/listings">Go Back</a>
-    </footer>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <a href="/listings">Go Back</a>
+</footer>
