@@ -2,7 +2,7 @@
 <div class="row">
   <h1 class="text-center">Edit Listing</h1>
   <div class="col-6 offset-3">
-    <form action="/listings/<%= listing._id %>?_method=PUT" method="POST">
+    <form action="/listings/<%= listing._id %>?_method=PUT" method="POST" novalidate class="validated-form">
       <div class="mb-3">
         <label class="form-label" for="title">Title:</label>
         <input
@@ -11,7 +11,11 @@
           id="title"
           name="listing[title]"
           value="<%= listing.title %>"
+          required
         />
+        <div class="valid-feedback">
+          looks good!
+        </div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="location">Location:</label>
@@ -21,7 +25,11 @@
           id="location"
           name="listing[location]"
           value="<%= listing.location %>"
+          required
         />
+        <div class="valid-feedback">
+          looks good!
+        </div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="price">Price:</label>
@@ -35,7 +43,11 @@
             aria-label="price"
             aria-describedby="price-label"
             value="<%= listing.price %>"
+            required
           />
+          <div class="valid-feedback">
+          looks good!
+        </div>
         </div>
       </div>
 
@@ -47,18 +59,27 @@
           id="image"
           name="listing[image]"
           value="<%= listing.image %>"
+          required
         />
+        <div class="valid-feedback">
+          looks good!
+        </div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="description">Description:</label>
+        
         <textarea
           class="form-control"
           type="text"
           id="description"
           name="listing[description]"
+          required
         >
 <%= listing.description %></textarea
         >
+        <div class="valid-feedback">
+          looks good!
+        </div>
       </div>
       <div class="mb-3">
         <button class="btn btn-info">Update Listing</button>

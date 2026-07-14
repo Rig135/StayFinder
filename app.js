@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
+const catchAsync = require('./utils/catchAsync');
 const ejsMate = require('ejs-mate');
 const methodOverride = require('method-override');
 const Listing = require('./models/listing');
@@ -27,42 +28,46 @@ app.get('/',(req,res)=>{
     res.render('home');
 });
 
-app.get('/listings', async (req,res)=>{
+app.get('/listings', catchAsync(async (req,res)=>{
     const allStays = await Listing.find({});
     res.render('listings/index', {allStays});
-});
+}));
 
-app.post('/listings', async (req,res)=>{
+app.post('/listings', catchAsync(async (req,res,next)=>{
     const listing = new Listing(req.body.listing);
     await listing.save();
     res.redirect(`/listings/${listing._id}`);
-})
+}))
 
 
 app.get('/listings/new', (req,res)=>{
     res.render('listings/new');
 });
 
-app.get('/listings/:id', async (req,res)=>{
+app.get('/listings/:id', catchAsync(async (req,res)=>{
     const listing = await Listing.findById(req.params.id);
     res.render('listings/show',{ listing });
-});
+}));
 
-app.get('/listings/:id/edit', async (req,res)=>{
+app.get('/listings/:id/edit', catchAsync(async (req,res)=>{
     const listing = await Listing.findById(req.params.id);
     res.render('listings/edit',{ listing });
-});
+}));
 
-app.put('/listings/:id', async (req,res)=>{
+app.put('/listings/:id', catchAsync(async (req,res)=>{
     const {id} = req.params;
     const listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
     res.redirect(`/listings/${listing._id}`);
-})
+}));
 
-app.delete('/listings/:id', async (req,res)=>{
+app.delete('/listings/:id', catchAsync(async (req,res)=>{
     const {id} = req.params;
     await Listing.findByIdAndDelete(id);
     res.redirect('/listings');
+}));
+
+app.use((err,req,res,next)=>{
+    res.send("Oh boy, something went wrong!");
 })
 
 

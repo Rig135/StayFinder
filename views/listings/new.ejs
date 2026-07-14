@@ -2,7 +2,7 @@
 <div class="row">
   <h1 class="text-center">New Listing</h1>
   <div class="col-6 offset-3">
-    <form action="/listings" method="POST">
+    <form action="/listings" method="POST" class="validated-form" novalidate>
       <div class="mb-3">
         <label class="form-label" for="title">Title:</label>
         <input
@@ -10,7 +10,11 @@
           type="text"
           id="title"
           name="listing[title]"
+          required
         />
+        <div class="valid-feedback">
+          looks good!
+        </div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="location">Location:</label>
@@ -19,7 +23,11 @@
           type="text"
           id="location"
           name="listing[location]"
+          required
         />
+        <div class="valid-feedback">
+          looks good!
+        </div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="price">Price:</label>
@@ -32,7 +40,11 @@
             name="listing[price]"
             aria-label="price"
             aria-describedby="price-label"
+            required
           />
+          <div class="valid-feedback">
+          looks good!
+        </div>
         </div>
       </div>
 
@@ -43,7 +55,11 @@
           type="url"
           id="image"
           name="listing[image]"
+          required
         />
+        <div class="valid-feedback">
+          looks good!
+        </div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="description">Description:</label>
@@ -52,7 +68,11 @@
           type="text"
           id="description"
           name="listing[description]"
+          required
         ></textarea>
+        <div class="valid-feedback">
+          looks good!
+        </div>
       </div>
       <div class="mb-3">
         <button class="btn btn-success">Add Listing</button>
@@ -61,3 +81,4 @@
     <a href="/listings">All Listings</a>
   </div>
 </div>
+
