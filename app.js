@@ -2,9 +2,11 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const catchAsync = require('./utils/catchAsync');
+const ExpressError = require('./utils/ExpressError');
 const ejsMate = require('ejs-mate');
 const methodOverride = require('method-override');
 const Listing = require('./models/listing');
+const {listingSchema} = require('./schemas.js');
 
 
 mongoose.connect('mongodb://127.0.0.1:27017/stay-finder');
@@ -24,6 +26,18 @@ app.use(express.urlencoded({extended:true}));
 app.use(methodOverride('_method'));
 
 
+const validateListing = (req,res,next)=>{
+    //validating Schema/ Data on server side using joi, in a middleware
+    const { error } = listingSchema.validate(req.body);
+    if(error){
+        const msg = error.details.map(el => el.message).join(',');
+        throw new ExpressError(msg,400);
+    } else{
+        next();
+    }
+}
+
+
 app.get('/',(req,res)=>{
     res.render('home');
 });
@@ -33,7 +47,8 @@ app.get('/listings', catchAsync(async (req,res)=>{
     res.render('listings/index', {allStays});
 }));
 
-app.post('/listings', catchAsync(async (req,res,next)=>{
+app.post('/listings',validateListing, catchAsync(async (req,res,next)=>{
+    // if(!req.body.listing) throw new ExpressError('Invalid Listing Data',400);
     const listing = new Listing(req.body.listing);
     await listing.save();
     res.redirect(`/listings/${listing._id}`);
@@ -54,7 +69,7 @@ app.get('/listings/:id/edit', catchAsync(async (req,res)=>{
     res.render('listings/edit',{ listing });
 }));
 
-app.put('/listings/:id', catchAsync(async (req,res)=>{
+app.put('/listings/:id',validateListing, catchAsync(async (req,res)=>{
     const {id} = req.params;
     const listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
     res.redirect(`/listings/${listing._id}`);
@@ -66,8 +81,17 @@ app.delete('/listings/:id', catchAsync(async (req,res)=>{
     res.redirect('/listings');
 }));
 
+//this * path runs only if nothing matches the above routes first and we didnt respond from any of them, so it comes at the end of our express app
+app.all('/{*path}', (req,res,next)=>{
+    next(new ExpressError("Page Not Found!", 404));
+})
+
+
+// Custom Error Handler
 app.use((err,req,res,next)=>{
-    res.send("Oh boy, something went wrong!");
+    const {statusCode = 500} = err;
+    if(!err.message) err.message = "Oh No, Something Went Wrong!";
+    res.status(statusCode).render('error', {err});
 })
 
 
