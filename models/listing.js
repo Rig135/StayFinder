@@ -6,7 +6,13 @@ const listingSchema = new Schema({
     image: String,
     price: Number,
     description: String,
-    location: String
+    location: String,
+    reviews: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Review'       //reference to Review model
+        }
+    ]
 });
 
 module.exports = mongoose.model('Listing', listingSchema);

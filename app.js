@@ -6,7 +6,8 @@ const ExpressError = require('./utils/ExpressError');
 const ejsMate = require('ejs-mate');
 const methodOverride = require('method-override');
 const Listing = require('./models/listing');
-const {listingSchema} = require('./schemas.js');
+const {listingSchema, reviewSchema} = require('./schemas.js');
+const Review = require('./models/review.js');
 
 
 mongoose.connect('mongodb://127.0.0.1:27017/stay-finder');
@@ -29,6 +30,17 @@ app.use(methodOverride('_method'));
 const validateListing = (req,res,next)=>{
     //validating Schema/ Data on server side using joi, in a middleware
     const { error } = listingSchema.validate(req.body);
+    if(error){
+        const msg = error.details.map(el => el.message).join(',');
+        throw new ExpressError(msg,400);
+    } else{
+        next();
+    }
+}
+
+const validateReview = (req,res,next)=> {
+    // validating Review Data on server side using joi,in a middleware
+    const {error} = reviewSchema.validate(req.body);
     if(error){
         const msg = error.details.map(el => el.message).join(',');
         throw new ExpressError(msg,400);
@@ -80,6 +92,17 @@ app.delete('/listings/:id', catchAsync(async (req,res)=>{
     await Listing.findByIdAndDelete(id);
     res.redirect('/listings');
 }));
+
+
+// Review Route
+app.post('/listings/:id/reviews', validateReview, catchAsync(async(req,res)=>{
+    const listing = await Listing.findById(req.params.id);
+    const review = new Review(req.body.review);
+    listing.reviews.push(review);
+    await review.save();
+    await listing.save();
+    res.redirect(`/listings/${listing._id}`);
+}))
 
 //this * path runs only if nothing matches the above routes first and we didnt respond from any of them, so it comes at the end of our express app
 app.all('/{*path}', (req,res,next)=>{
