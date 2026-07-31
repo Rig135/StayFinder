@@ -72,7 +72,7 @@ app.get('/listings/new', (req,res)=>{
 });
 
 app.get('/listings/:id', catchAsync(async (req,res)=>{
-    const listing = await Listing.findById(req.params.id);
+    const listing = await Listing.findById(req.params.id).populate('reviews');
     res.render('listings/show',{ listing });
 }));
 
@@ -102,6 +102,13 @@ app.post('/listings/:id/reviews', validateReview, catchAsync(async(req,res)=>{
     await review.save();
     await listing.save();
     res.redirect(`/listings/${listing._id}`);
+}));
+
+app.delete('/listings/:id/reviews/:reviewId', catchAsync(async(req,res)=>{
+    const {id, reviewId} = req.params;
+    await Listing.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});  //The $pull operator removes from an existing array all instances of a value or values that match a specified condition.
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/listings/${id}`);
 }))
 
 //this * path runs only if nothing matches the above routes first and we didnt respond from any of them, so it comes at the end of our express app
