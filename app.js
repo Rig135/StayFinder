@@ -1,13 +1,14 @@
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
-const catchAsync = require('./utils/catchAsync');
+const session = require('express-session');
 const ExpressError = require('./utils/ExpressError');
 const ejsMate = require('ejs-mate');
 const methodOverride = require('method-override');
-const Listing = require('./models/listing');
-const {listingSchema, reviewSchema} = require('./schemas.js');
-const Review = require('./models/review.js');
+
+
+const listingRoutes = require('./routes/listings');
+const reviewRoutes = require('./routes/reviews');
 
 
 mongoose.connect('mongodb://127.0.0.1:27017/stay-finder');
@@ -25,91 +26,30 @@ app.set('view engine','ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({extended:true}));
 app.use(methodOverride('_method'));
+app.use(express.static(path.join(__dirname, 'public')));
 
-
-const validateListing = (req,res,next)=>{
-    //validating Schema/ Data on server side using joi, in a middleware
-    const { error } = listingSchema.validate(req.body);
-    if(error){
-        const msg = error.details.map(el => el.message).join(',');
-        throw new ExpressError(msg,400);
-    } else{
-        next();
+//Setting up session
+const sessionConfig = {
+    secret: 'thisshouldbeabettersecret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,       //Date is in milliseconds so we are adding a week to it in milliseconds
+        maxAge: 1000 * 60 * 60 * 24 * 7
     }
 }
+app.use(session(sessionConfig));
 
-const validateReview = (req,res,next)=> {
-    // validating Review Data on server side using joi,in a middleware
-    const {error} = reviewSchema.validate(req.body);
-    if(error){
-        const msg = error.details.map(el => el.message).join(',');
-        throw new ExpressError(msg,400);
-    } else{
-        next();
-    }
-}
 
+app.use('/listings', listingRoutes);
+app.use('/listings/:id/reviews', reviewRoutes);
 
 app.get('/',(req,res)=>{
     res.render('home');
 });
 
-app.get('/listings', catchAsync(async (req,res)=>{
-    const allStays = await Listing.find({});
-    res.render('listings/index', {allStays});
-}));
 
-app.post('/listings',validateListing, catchAsync(async (req,res,next)=>{
-    // if(!req.body.listing) throw new ExpressError('Invalid Listing Data',400);
-    const listing = new Listing(req.body.listing);
-    await listing.save();
-    res.redirect(`/listings/${listing._id}`);
-}))
-
-
-app.get('/listings/new', (req,res)=>{
-    res.render('listings/new');
-});
-
-app.get('/listings/:id', catchAsync(async (req,res)=>{
-    const listing = await Listing.findById(req.params.id).populate('reviews');
-    res.render('listings/show',{ listing });
-}));
-
-app.get('/listings/:id/edit', catchAsync(async (req,res)=>{
-    const listing = await Listing.findById(req.params.id);
-    res.render('listings/edit',{ listing });
-}));
-
-app.put('/listings/:id',validateListing, catchAsync(async (req,res)=>{
-    const {id} = req.params;
-    const listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
-    res.redirect(`/listings/${listing._id}`);
-}));
-
-app.delete('/listings/:id', catchAsync(async (req,res)=>{
-    const {id} = req.params;
-    await Listing.findByIdAndDelete(id);
-    res.redirect('/listings');
-}));
-
-
-// Review Route
-app.post('/listings/:id/reviews', validateReview, catchAsync(async(req,res)=>{
-    const listing = await Listing.findById(req.params.id);
-    const review = new Review(req.body.review);
-    listing.reviews.push(review);
-    await review.save();
-    await listing.save();
-    res.redirect(`/listings/${listing._id}`);
-}));
-
-app.delete('/listings/:id/reviews/:reviewId', catchAsync(async(req,res)=>{
-    const {id, reviewId} = req.params;
-    await Listing.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});  //The $pull operator removes from an existing array all instances of a value or values that match a specified condition.
-    await Review.findByIdAndDelete(reviewId);
-    res.redirect(`/listings/${id}`);
-}))
 
 //this * path runs only if nothing matches the above routes first and we didnt respond from any of them, so it comes at the end of our express app
 app.all('/{*path}', (req,res,next)=>{
