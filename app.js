@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const session = require('express-session');
+const flash = require('connect-flash');
 const ExpressError = require('./utils/ExpressError');
 const ejsMate = require('ejs-mate');
 const methodOverride = require('method-override');
@@ -40,6 +41,14 @@ const sessionConfig = {
     }
 }
 app.use(session(sessionConfig));
+app.use(flash());
+
+//Setting up middleware for Flash messages, storing it in res.locals
+app.use((req,res,next)=>{
+    res.locals.success = req.flash('success');      // success message is now  accessible in every template of every view
+    res.locals.error = req.flash('error');
+    next();
+})
 
 
 app.use('/listings', listingRoutes);
