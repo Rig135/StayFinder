@@ -58,6 +58,7 @@ passport.deserializeUser(User.deserializeUser()); //generates a function used by
 
 //Setting up middleware for Flash messages, storing it in res.locals
 app.use((req,res,next)=>{
+    res.locals.currentUser = req.user;
     res.locals.success = req.flash('success');      // success message is now  accessible in every template of every view
     res.locals.error = req.flash('error');
     next();
