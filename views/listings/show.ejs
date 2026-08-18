@@ -10,8 +10,11 @@
       </div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item text-secondary"><%= listing.location %></li>
+        <li class="list-group-item">Submitted by <%= listing.author.username %></li>
         <li class="list-group-item">₹<%= listing.price %>/night</li>
       </ul>
+
+      <% if(currentUser && listing.author.equals(currentUser)){ %>
       <div class="card-body">
         <a
           class="card-link btn btn-info"
@@ -26,9 +29,11 @@
           <button class="btn btn-danger">Delete</button>
         </form>
       </div>
+      <% } %>
     </div>
   </div>
   <div class="col-4">
+    <% if(currentUser){ %>
         <h2>Leave a Review</h2>
     <form action="/listings/<%= listing._id %>/reviews" method="POST" class="mb-3 validated-form" novalidate>
       <div class="mb-3">
@@ -44,14 +49,19 @@
       </div>
       <button class="btn btn-success">Submit</button>
     </form>
+    <% } %>
+    <h2>Reviews</h2>
     <% for(let review of listing.reviews){ %>
       <div class="mb-3 card">
         <div class="card-body">
           <h5 class="card-title">Rating: <%= review.rating %></h5>
+          <h6 class="card-subtitle mb-2 text-muted">by: <%= review.author.username %></h6>
           <p class="card-text">Review: <%= review.body %></p>
+          <% if(currentUser && review.author.equals(currentUser)){ %>
           <form action="/listings/<%=listing._id%>/reviews/<%=review._id%>?_method=DELETE" method="post">
             <button class="btn btn-sm btn-danger">Delete</button>
           </form>
+          <% } %>
         </div>
       </div>
       <% } %>

@@ -22,6 +22,7 @@ const seedDB = async() =>{
         const listing = new Listing({
             location: `${cities[random417].city}, ${cities[random417].state}`,
             title: `${sample(descriptors)} ${sample(places)}`,
+            author: '6a79fbb58697f5dcc4d7d89e',     //default author of every listing
             // image: `https://picsum.photos/400?random=${Math.random()}`,
             image: `https://picsum.photos/id/${imageId}/400/300`,
             description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde iure odio modi officia, reiciendis non eius doloremque placeat corrupti ex numquam? Sed, in! Vitae libero cum dolore atque pariatur iste.',
