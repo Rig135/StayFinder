@@ -7,10 +7,14 @@ const listingController = require('../controllers/listings.js');
 
 const {isLoggedIn, validateListing, isAuthor} = require('../Middleware.js');
 
+const multer = require('multer');
+const { storage } = require('../cloudinary');
+const upload = multer({ storage });
+
 
 router.get('/', catchAsync(listingController.index));
 
-router.post('/',isLoggedIn, validateListing, catchAsync(listingController.createListing));
+router.post('/',isLoggedIn, upload.array('image') ,validateListing, catchAsync(listingController.createListing));
 
 
 router.get('/new', isLoggedIn, listingController.renderNewForm);

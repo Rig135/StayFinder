@@ -2,7 +2,7 @@
 <div class="row">
   <h1 class="text-center">New Listing</h1>
   <div class="col-6 offset-3">
-    <form action="/listings" method="POST" class="validated-form" novalidate>
+    <form action="/listings" method="POST" class="validated-form" novalidate enctype="multipart/form-data">
       <div class="mb-3">
         <label class="form-label" for="title">Title:</label>
         <input
@@ -48,7 +48,9 @@
         </div>
       </div>
 
-      <div class="mb-3">
+      <input type="file" name="image" id="" multiple>
+
+      <!-- <div class="mb-3">
         <label class="form-label" for="image">Image Url:</label>
         <input
           class="form-control"
@@ -60,7 +62,7 @@
         <div class="valid-feedback">
           looks good!
         </div>
-      </div>
+      </div> -->
       <div class="mb-3">
         <label class="form-label" for="description">Description:</label>
         <textarea
