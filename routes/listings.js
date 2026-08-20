@@ -23,7 +23,7 @@ router.get('/:id', catchAsync(listingController.showListing));
 
 router.get('/:id/edit',isLoggedIn, isAuthor, catchAsync(listingController.renderEditForm));
 
-router.put('/:id',isLoggedIn,isAuthor, validateListing, catchAsync(listingController.updateListing));
+router.put('/:id',isLoggedIn,isAuthor, upload.array('image'),validateListing, catchAsync(listingController.updateListing));
 
 router.delete('/:id',isLoggedIn,isAuthor, catchAsync(listingController.deleteListing));
 

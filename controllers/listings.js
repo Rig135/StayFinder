@@ -1,4 +1,5 @@
 const Listing = require('../models/listing');
+const {cloudinary} = require('../cloudinary');
 
 module.exports.index = async (req,res)=>{
     const allStays = await Listing.find({});
@@ -46,6 +47,18 @@ module.exports.showListing = async (req,res)=>{
 module.exports.updateListing = async (req,res)=>{
     const {id} = req.params;
     const listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+    const imgs = req.files.map(f => ({url: f.path, filename: f.filename}))
+    listing.images.push(...imgs);
+    await listing.save();
+
+    //deleting the images checked as delete, stored in deleteImages[] array
+    if(req.body.deleteImages){
+        for(let filename of req.body.deleteImages){
+            await cloudinary.uploader.destroy(filename);
+        }
+        await listing.updateOne({$pull: {images: {filename: {$in: req.body.deleteImages}}}})
+    }
+
     req.flash('success', 'Successfully updated listing');
     res.redirect(`/listings/${listing._id}`);
 };
