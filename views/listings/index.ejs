@@ -1,29 +1,33 @@
 <% layout('layouts/boilerplate') %>
-<div id="cluster-map"></div>
-    <h1>All StayFinder Listings</h1>
-    <div>
-        <a href="/listings/new">Add Listing</a>
-    </div>
-  
+<div id="cluster-map" class="mb-5"></div>
+
+<div class="d-flex justify-content-between align-items-center mb-4 mt-4">
+    <h2 class="h3 fw-bold mb-0">Explore stays</h2>
+    <a href="/listings/new" class="btn btn-outline-secondary px-3">Add Listing</a>
+</div>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mb-5">
     <% for(let stay of allStays){ %>
-            <div class="card mb-3" >
-                <div class="row">
-                    <div class="col-md-4">
-                        <img class="img-fluid" src="<%= stay.images[0].url %>" alt="">
+        <div class="col">
+            <a href="/listings/<%= stay._id %>" class="listing-link">
+                <div class="card listing-card h-100">
+                    <div class="listing-img-container">
+                        <% if(stay.images && stay.images.length) { %>
+                            <img src="<%= stay.images[0].url %>" alt="<%= stay.title %>">
+                        <% } else { %>
+                            <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60" alt="Default Image">
+                        <% } %>
                     </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title"><%= stay.title %></h5>
-                            <p class="card-text"><%= stay.description %></p>
-                            <p class="card-text">
-                                <small class="text-secondary"><%= stay.location %></small>
-                            </p>
-                            <a href="/listings/<%= stay._id %>" class="btn btn-primary">View <%= stay.title %></a>
-                        </div>
+                    <div class="card-body p-0 listing-info">
+                        <p class="listing-location text-truncate"><%= stay.location %></p>
+                        <p class="listing-title text-truncate"><%= stay.title %></p>
+                        <p class="listing-price">₹<%= stay.price %> <span class="fw-normal text-muted">night</span></p>
                     </div>
                 </div>
-            </div>
+            </a>
+        </div>
     <% } %>
+</div>
 
 
     <%- "<script>" %>

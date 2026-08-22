@@ -1,48 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StayFinder</title>
+    <title>StayFinder - Extraordinary Stays</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
 
+    <link rel="stylesheet" href="/stylesheets/app.css">
     <link rel="stylesheet" href="/stylesheets/home.css">
-
 </head>
-<body class="d-flex text-center text-white bg-dark">
-    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+
+<body class="home-body d-flex flex-column text-white">
+    <!-- Cinematic Overlay -->
+    <div class="home-overlay"></div>
+
+    <div class="d-flex w-100 h-100 p-3 p-md-4 mx-auto flex-column position-relative z-1">
         <header class="mb-auto">
-            <div>
-                <h3 class="float-md-start mb-0">StayFinder</h3>
-                <nav class="nav nav-masthead justify-content-center float-md-end">
-                    <a class="nav-link active" aria-current="page" href="#" >Home</a>
-                    <a class="nav-link" href="/listings">Listings</a>
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="/" class="text-white text-decoration-none fw-bold fs-4"
+                    style="font-family: 'DM Sans', sans-serif;">StayFinder</a>
+                <nav class="nav nav-masthead justify-content-center align-items-center gap-3 d-none d-sm-flex">
+                    <a class="nav-link text-white active" aria-current="page" href="/">Home</a>
+                    <a class="nav-link text-white" href="/listings">Explore</a>
                     <% if(!currentUser){ %>
-                    <a class="nav-link" href="/login">Login</a>
-                    <a class="nav-link" href="/register">Register</a>
-                    <% } else{ %>
-                    <a class="nav-link" href="/logout">Logout</a>
-                    <% } %>
+                        <a class="nav-link text-white" href="/login">Log in</a>
+                        <a class="btn btn-brand px-4 py-2 ms-2 fw-bold shadow-sm" href="/register">Sign up</a>
+                        <% } else{ %>
+                            <a class="btn btn-brand px-4 py-2 ms-2 fw-bold shadow-sm" href="/logout">Log out</a>
+                            <% } %>
                 </nav>
             </div>
         </header>
 
-        <main class="px-3">
-            <h1>StayFinder</h1>
-            <p class="lead">Welcome to StayFinder <br> Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo, inventore ipsa neque placeat vero, ducimus similique enim cumque minima quaerat ratione aliquam est natus veniam rem fugiat molestias, earum quis!</p>
-            <a href="/listings" class="btn btn-lg btn-secondary fw-bold bg-white">View Listings</a>
+        <main class="text-center my-auto px-3 px-md-5">
+            <h1 class="display-2 fw-bold mb-4 home-title">Find your next<br>extraordinary <span style="color: var(--brand-hover);">stay.</span></h1>
+            <p class="lead mb-5 fs-4 home-subtitle">Discover boutique properties, secluded cabins, and modern homes.</p>
+            <a href="/listings" class="btn btn-brand btn-lg px-5 py-3 fs-5 shadow-sm fw-bold">Explore stays</a>
         </main>
 
-        <footer class="mt-auto text-white-50">
-            <p>&copy 2026</p>
+        <footer class="mt-auto text-center text-white-50">
+            <p class="mb-0 fs-6">&copy; 2026 StayFinder. All rights reserved.</p>
         </footer>
     </div>
-    
 
-
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js"></script>
 </body>
+
 </html>

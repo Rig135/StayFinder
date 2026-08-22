@@ -1,21 +1,24 @@
-<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">StayFinder</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+<nav class="navbar sticky-top navbar-expand-md navbar-light bg-white" style="border-bottom: 1px solid var(--border-color); padding: 1rem 0;">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand fw-bold fs-4 text-brand" href="/">
+      StayFinder
+    </a>
+    <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-link" href="/">Home</a>
-        <a class="nav-link" href="/listings">All Listings</a>
-        <a class="nav-link" href="/listings/new">New Listing</a>
-      </div>
-      <div class="navbar-nav ms-auto">
+      <div class="navbar-nav ms-auto align-items-center gap-4">
+        <a class="nav-link text-dark fw-medium" href="/listings">Explore</a>
+        <a class="nav-link text-dark fw-medium" href="/listings/new">Host a stay</a>
         <% if(!currentUser){ %>
-        <a class="nav-link" href="/login">Login</a>
-        <a class="nav-link" href="/register">Register</a>
+          <div class="d-flex gap-2 mt-3 mt-md-0 ms-md-2">
+            <a class="btn btn-outline-secondary px-4" href="/login">Log in</a>
+            <a class="btn btn-brand px-4" href="/register">Sign up</a>
+          </div>
         <% } else{ %>
-        <a class="nav-link" href="/logout">Logout</a>
+          <div class="d-flex gap-2 mt-3 mt-md-0 ms-md-2">
+            <a class="btn btn-outline-secondary px-4" href="/logout">Log out</a>
+          </div>
         <% } %>
       </div>
     </div>

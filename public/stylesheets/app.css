@@ -1,9 +1,120 @@
-#cluster-map{
-    width: 100%;
-    height: 450px;
+/* Color Variables */
+:root {
+    --bg-primary: #FAF9F6;
+    --bg-card: #FFFFFF;
+    --text-primary: #222222;
+    --text-secondary: #6B6B6B;
+    --border-color: #E5E2DC;
+    --brand-primary: #C65D4B;
+    --brand-hover: #A94B3B;
 }
 
-#map{
-    width:100%;
+body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+}
+
+h1, h2, h3, h4, h5, h6, .navbar-brand {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-primary);
+}
+
+.text-brand {
+    color: var(--brand-primary) !important;
+}
+
+.btn-brand {
+    background-color: var(--brand-primary);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.btn-brand:hover {
+    background-color: var(--brand-hover);
+    color: #fff;
+}
+
+.btn-outline-secondary {
+    border-color: var(--border-color);
+    color: var(--text-primary);
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    border-color: var(--text-primary);
+}
+
+#cluster-map {
+    width: 100%;
+    height: 400px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+}
+
+#map {
+    width: 100%;
     height: 300px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+}
+
+/* Listings Grid Styles */
+.listing-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.listing-card {
+    border: none;
+    background-color: transparent;
+}
+
+.listing-img-container {
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 20 / 19;
+    margin-bottom: 0.75rem;
+    border: 1px solid var(--border-color);
+}
+
+.listing-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.listing-card:hover .listing-img-container img {
+    transform: scale(1.04);
+}
+
+.listing-info p {
+    margin-bottom: 0.15rem;
+    line-height: 1.4;
+}
+
+.listing-location {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.listing-title {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+}
+
+.listing-price {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-top: 0.25rem;
 }
