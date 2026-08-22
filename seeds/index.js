@@ -17,12 +17,19 @@ const seedDB = async() =>{
     for(let i=0;i<50;i++){
         const random417 = Math.floor(Math.random() * 417 );
         const price = Math.floor(Math.random() * 4000) + 1000;
-        const imageId = Math.floor(Math.random() * 1000);
+        // const imageId = Math.floor(Math.random() * 1000);
 
         const listing = new Listing({
-            location: `${cities[random417].city}, ${cities[random417].state}`,
             title: `${sample(descriptors)} ${sample(places)}`,
             author: '6a79fbb58697f5dcc4d7d89e',     //default author of every listing
+            location: `${cities[random417].city}, ${cities[random417].state}`,
+            geometry: {
+                type: "Point",
+                coordinates: [
+                    cities[random417].longitude,
+                    cities[random417].latitude,
+                ]
+            },
             // image: `https://picsum.photos/400?random=${Math.random()}`,
             // image: `https://picsum.photos/id/${imageId}/400/300`,
 

@@ -1,6 +1,9 @@
 const Listing = require('../models/listing');
 const {cloudinary} = require('../cloudinary');
 
+const maptilerClient = require("@maptiler/client");
+maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY;
+
 module.exports.index = async (req,res)=>{
     const allStays = await Listing.find({});
     res.render('listings/index', {allStays});
@@ -20,7 +23,19 @@ module.exports.renderEditForm = async (req,res)=>{
 };
 
 module.exports.createListing = async (req,res,next)=>{
+
+
+    const geoData = await maptilerClient.geocoding.forward(req.body.listing.location, { limit: 1 });
+    console.log(geoData);
+    if (!geoData.features?.length) {
+        req.flash('error', 'Could not geocode that location. Please try again and enter a valid location.');
+        return res.redirect('/listings/new');
+    }
+
     const listing = new Listing(req.body.listing);
+    //adding geoLocation and location on 
+    listing.geometry = geoData.features[0].geometry;
+    listing.location = geoData.features[0].place_name;
     listing.images = req.files.map(f => ({url: f.path, filename: f.filename}));
     listing.author = req.user._id;
     await listing.save();
@@ -46,7 +61,19 @@ module.exports.showListing = async (req,res)=>{
 
 module.exports.updateListing = async (req,res)=>{
     const {id} = req.params;
+
+    const geoData = await maptilerClient.geocoding.forward(req.body.listing.location, { limit: 1 });
+    // console.log(geoData);
+    if (!geoData.features?.length) {
+        req.flash('error', 'Could not geocode that location. Please try again and enter a valid location.');
+        return res.redirect(`/listings/${id}/edit`);
+    }
+
     const listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+
+    listing.geometry = geoData.features[0].geometry;
+    listing.location = geoData.features[0].place_name;
+
     const imgs = req.files.map(f => ({url: f.path, filename: f.filename}))
     listing.images.push(...imgs);
     await listing.save();

@@ -54,6 +54,7 @@
     </div>
   </div>
   <div class="col-4">
+    <div id="map" style="width: 100%; height: 300px;"></div>
     <% if(currentUser){ %>
         <h2>Leave a Review</h2>
     <form action="/listings/<%= listing._id %>/reviews" method="POST" class="mb-3 validated-form" novalidate>
@@ -106,3 +107,11 @@
 <footer>
   <a href="/listings">Go Back</a>
 </footer>
+
+
+<%-"<script>"%>
+const maptilerApiKey = '<%- process.env.MAPTILER_API_KEY %>';
+const listing = <%- JSON.stringify(listing) %>;
+<%-"</script>"%>
+
+<script src="/javascripts/showPageMap.js"></script>
