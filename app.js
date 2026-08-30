@@ -13,6 +13,7 @@ const ExpressError = require('./utils/ExpressError');
 const ejsMate = require('ejs-mate');
 const methodOverride = require('method-override');
 const User = require('./models/user');
+const helmet = require('helmet');
 
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
@@ -20,6 +21,8 @@ const LocalStrategy = require('passport-local');
 const usersRoutes = require('./routes/users');
 const listingRoutes = require('./routes/listings');
 const reviewRoutes = require('./routes/reviews');
+
+const mongoSanitize = require('express-mongo-sanitize');
 
 
 mongoose.connect('mongodb://127.0.0.1:27017/stay-finder');
@@ -38,20 +41,73 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({extended:true}));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(mongoSanitize({
+    replaceWith: '_',
+}));
 
 //Setting up session
 const sessionConfig = {
+    name: 'session',
     secret: 'thisshouldbeabettersecret',
     resave: false,
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
+        // secure: true,
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,       //Date is in milliseconds so we are adding a week to it in milliseconds
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
 }
 app.use(session(sessionConfig));
 app.use(flash());
+// app.use(helmet());
+
+const scriptSrcUrls = [
+    "https://stackpath.bootstrapcdn.com/",
+    "https://kit.fontawesome.com/",
+    "https://cdnjs.cloudflare.com/",
+    "https://cdn.jsdelivr.net",
+    "https://cdn.maptiler.com/", 
+];
+const styleSrcUrls = [
+    "https://kit-free.fontawesome.com/",
+    "https://stackpath.bootstrapcdn.com/",
+    "https://fonts.googleapis.com/",
+    "https://use.fontawesome.com/",
+    "https://cdn.jsdelivr.net",
+    "https://cdn.maptiler.com/", 
+];
+const connectSrcUrls = [
+    "https://api.maptiler.com/",
+    "https://cdn.jsdelivr.net/",
+    "https://cdn.maptiler.com/",
+];
+
+const fontSrcUrls = [
+    "https://fonts.gstatic.com/",
+];
+
+app.use(
+    helmet.contentSecurityPolicy({
+        directives: {
+            defaultSrc: ["'self'"],
+            connectSrc: ["'self'", ...connectSrcUrls],
+            scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+            styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+            workerSrc: ["'self'", "blob:"],
+            objectSrc: [],
+            imgSrc: [
+                "'self'",
+                "blob:",
+                "data:",
+                "https://res.cloudinary.com/enrlyidw/",
+                "https://api.maptiler.com/",
+                "https://images.unsplash.com/"
+            ],
+            fontSrc: ["'self'", ...fontSrcUrls]
+        }
+    })
+)
 
 app.use(passport.initialize());
 app.use(passport.session());    //for persistent login sessions, app,use(session()) should be before app.use(passport.session());
@@ -64,18 +120,12 @@ passport.deserializeUser(User.deserializeUser()); //generates a function used by
 
 //Setting up middleware for Flash messages, storing it in res.locals
 app.use((req,res,next)=>{
+    console.log(req.query);
     res.locals.currentUser = req.user;
     res.locals.success = req.flash('success');      // success message is now  accessible in every template of every view
     res.locals.error = req.flash('error');
     next();
 })
-
-app.get('/fakeUser', async (req,res)=>{
-    const user = new User({email: 'harshitttt@gmail.com', username: 'harshitttt'});
-    const newUser = await User.register(user, 'monkeyPassword');
-    res.send(newUser);
-})
-
 
 app.use('/', usersRoutes);
 app.use('/listings', listingRoutes);
