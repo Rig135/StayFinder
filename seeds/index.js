@@ -3,7 +3,9 @@ const cities = require('./cities');
 const {places, descriptors } = require('./seedHelpers');
 const Listing = require('../models/listing');
 
-mongoose.connect('mongodb://127.0.0.1:27017/stay-finder');
+const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/stay-finder';
+
+mongoose.connect(dbUrl);
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", ()=>{

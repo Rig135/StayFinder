@@ -7,7 +7,10 @@ if(process.env.NODE_ENV !== 'production'){
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
+
 const session = require('express-session');
+const { MongoStore } = require('connect-mongo');
+
 const flash = require('connect-flash');
 const ExpressError = require('./utils/ExpressError');
 const ejsMate = require('ejs-mate');
@@ -23,9 +26,9 @@ const listingRoutes = require('./routes/listings');
 const reviewRoutes = require('./routes/reviews');
 
 const mongoSanitize = require('express-mongo-sanitize');
+const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/stay-finder';
 
-
-mongoose.connect('mongodb://127.0.0.1:27017/stay-finder');
+mongoose.connect(dbUrl);
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", ()=>{
@@ -45,10 +48,25 @@ app.use(mongoSanitize({
     replaceWith: '_',
 }));
 
+const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
+
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 60 * 60,
+    crypto: {
+        secret
+    }
+});
+
+store.on("error", function(e){
+    console.log("SESSION STORE ERROR", e);
+});
+
 //Setting up session
 const sessionConfig = {
+    store: store,
     name: 'session',
-    secret: 'thisshouldbeabettersecret',
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -150,7 +168,7 @@ app.use((err,req,res,next)=>{
     res.status(statusCode).render('error', {err});
 })
 
-
-app.listen(3000, ()=>{
-    console.log("Serving on port 3000");
+const port = process.env.PORT || 3000;
+app.listen(port, ()=>{
+    console.log(`Serving on port ${port}`);
 });
